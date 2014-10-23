@@ -1,0 +1,24 @@
+SET LOCAL curDir=$(CWD)
+//path to ANTLR jar file
+SET LOCAL antlr4.jar=d:\Install\Develop\ANTLR\antlr-4.4-complete.jar
+//setup java classpath
+ENV_SET CLASSPATH=.;$(antlr4.jar)
+//do all in temporary folder
+SET LOCAL outDir=$(SYS.TEMP)\npp_antlr4_out
+mkdir $(outDir)
+
+//generate java classes from grammar
+"$(SYS.JAVA_HOME)bin\java.exe" -jar $(antlr4.jar) "$(FULL_CURRENT_PATH)"  -o $(outDir)
+if $(EXITCODE) <> 0 goto failExit
+//compile all generated classes
+"$(SYS.JAVA_HOME)bin\javac.exe" $(outDir)\$(NAME_PART)*.java
+
+cd $(outDir)
+//ask for string to parse
+INPUTBOX "Input expression:"
+//run ANTLR embed visualizer
+cmd /c echo "$(INPUT)" | "$(SYS.JAVA_HOME)bin\java.exe" org.antlr.v4.runtime.misc.TestRig $(NAME_PART) $(CURRENT_WORD) -gui
+cd $(curDir)
+//remove temporary folder
+cmd /c rmdir /s /q $(outDir)
+:failExit
