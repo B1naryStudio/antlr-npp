@@ -13,4 +13,5 @@ Scripts use currently opened file as grammar file and selected text as root rule
 So to use it open grammar file, make name of tested rule selected then run script and input some test data.
 
 run_user_input.nppexec - asks one line to use as parser input
+
 run_file_input.nppexec - asks file name to parse file
